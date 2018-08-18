@@ -290,7 +290,7 @@ def admin_edit(time, name):
             clean_cache(key)
             update_xml(post.timestamp)
             return redirect(url_for('admin.admin_edit', time=post.timestampInt, name=post.url_name))
-    form.category.data = post.category.category
+    form.category.data = post.category
     form.tags.data = post.tags
     form.url_name.data = post.url_name
     form.time.data = post.timestamp
