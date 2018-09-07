@@ -699,6 +699,17 @@ def edit_column_article(url, id):
         if article.title != _title:
             # the title is change
             clean_cache('column_' + url)
+        """
+        :个人感觉，可能需要修改专题的缓存，因为如果不修改专题的缓存，那么当专题文章的title，private修改的时候，缓存信息并不会修改。
+        :那么在column_views.py中第52行，是用新的缓存信息来在articles.index(_data)中查询，由于缓存信息并没有修改，所以会报错。
+        """
+        old_cache_datas=cache.get('_'.join(['column', url]))
+        for dict in old_cache_datas:
+            if dict['id'] is article.id:
+                dict['title'] = article.title
+                dict['secrecy'] = article.secrecy
+        cache.set('_'.join(['column', url]), old_cache_datas, timeout=60 * 60 * 24 * 30)
+        
         return redirect(url_for('admin.admin_column', id=column.id))
 
     form.title.data = article.title
